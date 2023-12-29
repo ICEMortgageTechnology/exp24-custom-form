@@ -79,8 +79,39 @@ Next, you'll learn how to add custom JavaScript code to populate a Data Tabel ti
 
 ### Step 3: Making API calls 
 In this step, you will enhance your form by doing an API call to lookup disaster's from FEMA for the supplied subject property address. You will then use the results from that API call to populate your Data Table
+1. Rename your button to say "Lookup Disasters".
+2. In the onclick function, add the API call to fetch the disasters from the FEMA API. To do this you will use the following API which takes, as a parameter, the state and county.
+API: https://www.fema.gov/api/open/v2/DisasterDeclarationsSummaries?$count=true&$filter=state eq "STATE" and designatedArea eq "COUNTY (County)
+Remember we store the state in Field ID: 14 and the county in Field ID: 13.
+```
+//Sample code to get a field ID:
+let loanObj = await elli.script.getObject('loan');
+let field = await loanObj.getField('<field ID>');
 
-### Step 4: Using a custom field to persist data
-In this step, we will complete our form by persisting data into custom fields so that we can persist our disaster data with our loan.
+//Sample code on calling http object
+let httpObj = await elli.script.getObject('http');
+let disasterDeclResults = await httpObj.get(myAPIURL);
+```
+3. If there are results, iterate over them to build out your table's data set based upon the columns you've configured.
+```
+//Sample Code
+    //If there are disasters, we will build our rows for only the fields we are concerned about
+    if(disasterDeclResults.body && disasterDeclResults.body.metadata.count > 0) {
+      let myDisasters = [];
+      disasterDeclResults.body.DisasterDeclarationsSummaries.forEach((item) => {
+        let entry = {};
+        entry.declarationType = item.declarationType;
+        entry.ihProgramDeclared = item.ihProgramDeclared;
+        entry.incidentBeginDate = item.incidentBeginDate;
+        myDisasters.push(entry);
+      })
+      let table = await elli.script.getObject('DataResultsCtrl');
+      table.bind(myDisasters);      
+    }
+```
 
+### final: Adding finishing touches and using custom fields to persist data
+Our final version of this tracks and displays our last run date and uses the HMDA county code to match against the FIPS Code to further reduce the result sets. Finally, it persists our last run date as well as the results so we can easily display them on load.  
+
+I leave you to figure this part out.
 
