@@ -57,7 +57,8 @@ Next, you'll learn how to add custom JavaScript code to populate a Data Tabel ti
 	          "label": "Incident Begin Date",
 	          "type" : "Date",
 	          "sortable": true,
-	        }];
+	        }]
+		};
 	table.config(settings); 		
 ```
 7. In your code editor, add an async onClick function that we will use to populate our data table.
@@ -67,7 +68,7 @@ Next, you'll learn how to add custom JavaScript code to populate a Data Tabel ti
       'declarationType' : 'DR',
       'ihProgramDeclared': false,
       'incidentBeginDate' : '2022-12-27',
-    }]
+    }];
     
     let table = await elli.script.getObject('DataResultsCtrl');
   
@@ -81,7 +82,8 @@ Next, you'll learn how to add custom JavaScript code to populate a Data Tabel ti
 In this step, you will enhance your form by doing an API call to lookup disaster's from FEMA for the supplied subject property address. You will then use the results from that API call to populate your Data Table
 1. Rename your button to say "Lookup Disasters".
 2. In the onclick function, add the API call to fetch the disasters from the FEMA API. To do this you will use the following API which takes, as a parameter, the state and county.
-API: https://www.fema.gov/api/open/v2/DisasterDeclarationsSummaries?$count=true&$filter=state eq "STATE" and designatedArea eq "COUNTY (County)
+API: https://www.fema.gov/api/open/v2/DisasterDeclarationsSummaries?$count=true&$filter=state eq 'STATE' and designatedArea eq 'COUNTY (County)'
+For more information on this API, you can visit https://www.fema.gov/openfema-data-page/disaster-declarations-summaries-v2
 Remember we store the state in Field ID: 14 and the county in Field ID: 13.
 ```
 //Sample code to get a field ID:
